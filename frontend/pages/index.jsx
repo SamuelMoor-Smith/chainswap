@@ -5,8 +5,8 @@ import NftCreator from "../components/nftCreator";
 import XERC1155WithURIsABI from '../contract/XERC1155WithURIsABI.json';
 import { useContract } from "@thirdweb-dev/react";
 
-export const MUMBAI_ADDRESS = "0x0589d7d478EC4Ad0BFF0Ec468EeB6E46622F8886";
-export const FUJI_ADRESS = "0x329156265AFeCfCe1c504612715693f9954609Ab";
+export const MUMBAI_ADDRESS = "0x009646443dAF0ac64398bbf9b6040d914b7547f0";
+export const FUJI_ADRESS = "0x2b648DaF64C694dFc90584E28390100CD4d7a018";
 
 export default function Home({appState, setAppState, activeChain}) {
 
