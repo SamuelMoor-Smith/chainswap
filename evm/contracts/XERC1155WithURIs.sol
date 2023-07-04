@@ -23,13 +23,13 @@ contract XERC1155WithURIs is ERC1155, IDapp {
   mapping (uint256 => string) private _tokenURIs;
 
   // counter for the token ID
-  uint256 private _tokenIdTracker = 0;
+  uint256 public tokenIdTracker = 0;
 
   // transfer params struct where we specify which NFTs should be transferred to
   // the destination chain and to which address
   struct TransferParams {
-    uint256[] nftIds;
-    uint256[] nftAmounts;
+    uint256 transferTokenId;
+    string tokenURI;
     bytes nftData;
     bytes recipient;
   }
@@ -64,9 +64,9 @@ contract XERC1155WithURIs is ERC1155, IDapp {
     string memory uri
   ) external {
     require(msg.sender == owner, "only owner");
-    _mint(account, _tokenIdTracker, 1, nftData); // Only mint 1 token
-    _setURI(_tokenIdTracker, uri); // Set the uri for that token
-    _tokenIdTracker++;
+    _mint(account, tokenIdTracker, 1, nftData); // Only mint 1 token
+    _setURI(tokenIdTracker, uri); // Set the uri for that token
+    tokenIdTracker++;
   }
 
   // Function to set the URI for a tokenId
@@ -96,11 +96,11 @@ contract XERC1155WithURIs is ERC1155, IDapp {
 
   /// @notice function to generate a cross-chain NFT transfer request.
   /// @param destChainId chain ID of the destination chain in string.
-  /// @param transferParams transfer params struct.
+  /// @param tokenId tokenId to transfer.
   /// @param requestMetadata abi-encoded metadata according to source and destination chains
   function transferCrossChain(
     string calldata destChainId,
-    TransferParams calldata transferParams,
+    uint256 tokenId,
     bytes calldata requestMetadata
   ) public payable {
     require(
@@ -109,8 +109,15 @@ contract XERC1155WithURIs is ERC1155, IDapp {
       "contract on dest not set"
     );
 
+    TransferParams memory transferParams;
+    transferParams.transferTokenId=tokenId;
+    transferParams.tokenURI=getURI(tokenId);
+    transferParams.nftData=bytes('0x');
+    transferParams.recipient=toBytes(msg.sender);
+
     // burning the NFTs from the address of the user calling _burnBatch function
-    _burnBatch(msg.sender, transferParams.nftIds, transferParams.nftAmounts);
+    _burn(msg.sender, tokenId, 1);
+    delete _tokenURIs[tokenId];  // Remove the URI
 
     // sending the transfer params struct to the destination chain as payload.
     bytes memory packet = abi.encode(transferParams);
@@ -171,12 +178,15 @@ contract XERC1155WithURIs is ERC1155, IDapp {
 
     // decoding our payload
     TransferParams memory transferParams = abi.decode(packet, (TransferParams));
-    _mintBatch(
-      toAddress(transferParams.recipient),
-      transferParams.nftIds,
-      transferParams.nftAmounts,
-      transferParams.nftData
-    );
+    _mint(toAddress(transferParams.recipient), tokenIdTracker, 1, transferParams.nftData);
+    _setURI(tokenIdTracker, transferParams.tokenURI);
+    tokenIdTracker++;
+    // _mintBatch(
+    //   toAddress(transferParams.recipient),
+    //   transferParams.nftIds,
+    //   transferParams.nftAmounts,
+    //   transferParams.nftData
+    // );
 
     return abi.encode(srcChainId);
   }
@@ -205,4 +215,14 @@ contract XERC1155WithURIs is ERC1155, IDapp {
     }
     addr = address(srcTokenAddress);
   }
+
+  function toBytes(address a) public pure returns (bytes memory b){
+    assembly {
+        let m := mload(0x40)
+        a := and(a, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+        mstore(add(m, 20), xor(0x140000000000000000000000000000000000000000, a))
+        mstore(0x40, add(m, 52))
+        b := m
+   }
+}
 }
