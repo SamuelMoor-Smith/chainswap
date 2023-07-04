@@ -1,4 +1,8 @@
-
+.rightSide {
+	display: flex;
+	gap: 2rem;
+	align-items: center;
+}
 
 .navbar {
 	display: flex;
@@ -9,8 +13,14 @@
 	margin-bottom: 4rem;
 }
 
+.logo_container{
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+}
 
 .alchemy_logo{
-	width: 8rem;
+	height: 3rem;
+	width: 3rem;
 	cursor: pointer;
 }

@@ -13,11 +13,8 @@ function isMumbaiOrFuji(chain) {
 
 // React component for NFT creator form
 export default function NftCreator({ contractMap }) {
-  // Hooks for handling form input and submission
-  // const { address, isDisconnected } = useAccount();
   const address = useAddress();
   const chain = useChain();
-  // const { data: signer } = useSigner();
   const [txHash, setTxHash] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [imageFile, setImageFile] = useState("");
@@ -30,12 +27,6 @@ export default function NftCreator({ contractMap }) {
   const [error, setError] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const { mutateAsync: upload } = useStorageUpload();
-
-  // const web3 = new Web3(Web3.givenProvider);
-  // const contract = new web3.eth.Contract(
-  //   XERC1155WithURIsABI,
-  //   contractAddress
-  // );
 
   // Function to check if all required form fields are filled
   const formNotFilled = () => {
@@ -99,8 +90,6 @@ export default function NftCreator({ contractMap }) {
       const metadata = await generateMetadata();
       console.log(metadata);
       console.log("about to mint");
-      // console.log(contract)
-      // console.log(contract.functions)
       console.log(chain)
       console.log(contractMap[chain.name])
       const mintTx = await contractMap[chain.name].call(
@@ -121,15 +110,6 @@ export default function NftCreator({ contractMap }) {
   // Async function to generate metadata for the NFT
   const generateMetadata = async () => {
     // Create a new instance of a FormData object
-    // const formData = new FormData();
-    // Append the image file to the FormData object
-    // formData.append("image", imageFile);
-
-    // Send a POST request to the api/pinFileToIpfs.js to store the NFT image or video on IPFS
-    // const { fileURL } = await fetch("/api/pinFileToIpfs", {
-    //   method: "POST",
-    //   body: formData,
-    // }).then((res) => res.json());
 
     // Use thridweb to store the image
     const fileURL = await upload({ data: [imageFile] });
@@ -143,12 +123,6 @@ export default function NftCreator({ contractMap }) {
       attributes: NFTAttributes,
     };
 
-    // Send a POST request to the api/pinJsonToIpfs.js to store the NFT metadata on IPFS
-    // const { metadataURL } = await fetch("/api/pinJsonToIpfs", {
-    //   method: "POST",
-    //   body: JSON.stringify(metadata),
-    // }).then((res) => res.json());
-
     // Convert the metadata object to a JSON string
     const metadataString = JSON.stringify(metadata);
 
@@ -160,6 +134,8 @@ export default function NftCreator({ contractMap }) {
   };
   return (
     // Main page container
+    <>
+    <h2 style={{ fontSize: "20px" }}>Mint your NFT</h2>
     <div className={styles.page_flexBox}>
       <div
         // Check if transaction hash exists to change styling of container
@@ -326,5 +302,6 @@ export default function NftCreator({ contractMap }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
