@@ -13,6 +13,7 @@ export default function Home({appState, setAppState, activeChain}) {
   const mumbai_contract_hook = useContract(MUMBAI_ADDRESS, XERC1155WithURIsABI);
   const fuji_contract_hook = useContract(FUJI_ADRESS, XERC1155WithURIsABI);
 
+  
   const contractMap = {
     "Mumbai": mumbai_contract_hook.contract,
     "Avalanche Fuji Testnet": fuji_contract_hook.contract
