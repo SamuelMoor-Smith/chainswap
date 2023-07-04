@@ -17,7 +17,7 @@ function hexToUtf8(hex) {
 
 function isMumbaiOrFuji(chain) {
   console.log(chain);
-  return chain && (chain.name == "Mumbai" || chain.name == "Avalanche Fuji Testnet");
+  return chain && chain.name && (chain.name == "Mumbai" || chain.name == "Avalanche Fuji Testnet");
 }
 
 export default function NFTGallery({contractMap, activeChain}) {
@@ -52,11 +52,15 @@ export default function NFTGallery({contractMap, activeChain}) {
       throw new Error("No contract on that chain");
     }
 
+    console.log("transaction started")
+
     const tx = await contractMap[chain.name].call(
       "transferCrossChain",
       [destChainId, tokenId, requestMetadata]
     );
-    console.log(tx);
+    console.log(tx.receipt, tx.receipt.transactionHash);
+
+    window.alert('Transfer sent. Your transaction id for crosschain transfer is: ' + tx.receipt.transactionHash);
   }
   const fetchNFTs = async ( pagekey) => {
     if (!pageKey) setIsloading(true);

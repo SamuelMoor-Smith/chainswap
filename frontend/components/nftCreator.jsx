@@ -9,7 +9,8 @@ import { useChain } from "@thirdweb-dev/react";
 import { useAddress } from "@thirdweb-dev/react";
 
 function isMumbaiOrFuji(chain) {
-  return (chain.name == "Mumbai" || chain.name == "Avalanche Fuji Testnet");
+  console.log(chain);
+  return chain && chain.name && (chain.name == "Mumbai" || chain.name == "Avalanche Fuji Testnet");
 }
 
 // React component for NFT creator form
@@ -106,6 +107,7 @@ export default function NftCreator({ contractMap }) {
       return;
     } finally {
       setIsSubmitting(false);
+      window.alert('NFT Minting process has completed.');
     }
   };
   // Async function to generate metadata for the NFT

@@ -63,7 +63,6 @@ contract XERC1155WithURIs is ERC1155, IDapp {
     bytes memory nftData,
     string memory uri
   ) external {
-    require(msg.sender == owner, "only owner");
     _mint(account, tokenIdTracker, 1, nftData); // Only mint 1 token
     _setURI(tokenIdTracker, uri); // Set the uri for that token
     tokenIdTracker++;
