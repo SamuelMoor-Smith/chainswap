@@ -90,7 +90,7 @@ export default function NftCreator({ contractMap }) {
       console.log("generating metadata");
       const metadata = await generateMetadata();
       console.log(metadata);
-      console.log("about to mint");
+      console.log("about to mint here");
       console.log(chain)
       console.log(contractMap[chain.name])
       const mintTx = await contractMap[chain.name].call(
