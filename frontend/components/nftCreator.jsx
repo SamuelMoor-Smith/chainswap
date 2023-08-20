@@ -9,7 +9,7 @@ import { useChain } from "@thirdweb-dev/react";
 import { useAddress } from "@thirdweb-dev/react";
 
 function isMumbaiOrFuji(chain) {
-  console.log(chain);
+  // console.log(chain);
   return chain && chain.name && (chain.name == "Mumbai" || chain.name == "Avalanche Fuji Testnet");
 }
 
@@ -102,12 +102,14 @@ export default function NftCreator({ contractMap }) {
       setTxHash(mintTx.hash);
       // await mintTx.wait();
       setTxHash(null);
+      setIsSubmitting(false);
+      window.alert('NFT Minting process has succeeded.');
+      return;
     } catch (e) {
       console.log(e);
-      return;
-    } finally {
       setIsSubmitting(false);
-      window.alert('NFT Minting process has completed.');
+      window.alert('NFT Minting process has failed.');
+      return;
     }
   };
   // Async function to generate metadata for the NFT

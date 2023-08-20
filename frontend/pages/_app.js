@@ -14,6 +14,7 @@ function MyApp({ Component, pageProps }) {
 		<ThirdwebProvider 
 			activeChain={activeChain}
 			supportedChains={[Mumbai, AvalancheFuji]}
+			clientId="5755a9ddd20a44c1d73f38608ae5d877"
 		>
 			<MainLayout setAppState={setState} activeChain={activeChain} setActiveChain={setActiveChain}>
 				<Component {...pageProps} appState={state} activeChain={activeChain} setAppState={setState} />
