@@ -103,7 +103,7 @@ export default function NftCreator({ contractMap }) {
       // await mintTx.wait();
       setTxHash(null);
       setIsSubmitting(false);
-      window.alert('NFT Minting process has succeeded.');
+      window.alert('NFT Minting process has succeeded!');
       return;
     } catch (e) {
       console.log(e);
